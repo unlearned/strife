@@ -1,0 +1,42 @@
+{
+    "phases": [
+	{
+	    "name": "entory",
+	    "number": 1000
+	},
+	{
+	    "name": "casual meeting",
+	    "number": 900,
+	    "average_number_of_hours_spent": 1.5
+	},
+	{
+	    "name": "document screening",
+	    "number": 800,
+	    "average_number_of_hours_spent": 1.5
+	},
+	{
+	    "name": "technical interview",
+	    "number": 700,
+	    "average_number_of_hours_spent": 1.5
+	},
+	{
+	    "name": "2nd interview",
+	    "number": 600,
+	    "average_number_of_hours_spent": 1.5
+	},
+	{
+	    "name": "final interview",
+	    "number": 500,
+	    "average_number_of_hours_spent": 1.5
+	},
+	{
+	    "name": "offer meeting",
+	    "number": 400,
+	    "average_number_of_hours_spent": 1.5
+	},
+	{
+	    "name": "joined",
+	    "number": 300
+	}
+    ]
+}
