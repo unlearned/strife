@@ -61,9 +61,10 @@ func TestLongestLengthOnPhases(t *testing.T) {
 func TestTextSuccessOnPhases(t *testing.T) {
 	ps := createPhases()
 	text := ps.text()
-	idealText := "|      phase        | first|second| third|\n"
-	idealText += "|      number       |  100 |  50  |  25  |\n"
-	idealText += "|average hours spent|  1.5 |   2  |   3  |"
+	idealText := "|         phase        | first|second| third|\n"
+	idealText += "|         number       |  100 |  50  |  25  |\n"
+	idealText += "|average hours required|  1.5 |   2  |   3  |"
+
 	if text != idealText {
 		t.Errorf("it should return \n%v\n but it returned \n%v", idealText, text)
 	}

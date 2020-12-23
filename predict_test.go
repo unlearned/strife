@@ -13,10 +13,10 @@ func createPredictions() *Predictions {
 func TestTextSuccessOnPredictions(t *testing.T) {
 	ps := createPredictions()
 	text := ps.text()
-	idealText := "|      phase        | first|second| third|\n"
-	idealText += "|      number       |  100 |  50  |  25  |\n"
-	idealText += "|average hours spent|  1.5 |   2  |   3  |\n"
-	idealText += "|   hours required  |  150 |  100 |  75  |"
+	idealText := "|         phase        | first|second| third|\n"
+	idealText += "|         number       |  100 |  50  |  25  |\n"
+	idealText += "|average hours required|  1.5 |   2  |   3  |\n"
+	idealText += "| total hours required |  150 |  100 |  75  |"
 
 	if text != idealText {
 		t.Errorf("it should return \n%v\n but it returned \n%v", idealText, text)

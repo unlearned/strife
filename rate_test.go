@@ -14,10 +14,10 @@ func TestPredictSuccess(t *testing.T) {
 			&rate{PhaseBefore: "Third", PhaseAfter: "Fourth", Rate: big.NewRat(1, 4)},
 		},
 		phases: &Phases{
-			phase{Name: "First", Number: 3600},
-			phase{Name: "Second", Number: 1440},
-			phase{Name: "Third", Number: 480},
-			phase{Name: "Fourth", Number: 120},
+			phase{Name: "First", Number: 3600, AverageNumberOfHoursSpent: 1.1},
+			phase{Name: "Second", Number: 1440, AverageNumberOfHoursSpent: 1.2},
+			phase{Name: "Third", Number: 480, AverageNumberOfHoursSpent: 1.3},
+			phase{Name: "Fourth", Number: 120, AverageNumberOfHoursSpent: 1.4},
 		},
 	}
 
@@ -34,24 +34,24 @@ func TestPredictSuccess(t *testing.T) {
 		t.Fatalf("it should return 4 length but %v length", len(*ps))
 	}
 
-	p1 := prediction{phase: phase{"First", 3000, 0}}
+	p1 := prediction{phase: phase{"First", 3000, 1.1}, hoursRequired: 3300}
 	if (*ps)[0] != p1 {
-		t.Errorf("it should return {First, 3000, 0} but it returned %v", (*ps)[0])
+		t.Errorf("it should return {{First 3000 1.1} 3300} but it returned %v", (*ps)[0])
 	}
 
-	p2 := prediction{phase: phase{"Second", 1200, 0}}
+	p2 := prediction{phase: phase{"Second", 1200, 1.2}, hoursRequired: 1440}
 	if (*ps)[1] != p2 {
-		t.Errorf("it should return {Second, 1200, 0} but it returned %v", (*ps)[1])
+		t.Errorf("it should return  {{Second 1200 1.2} 1440} but it returned %v", (*ps)[1])
 	}
 
-	p3 := prediction{phase: phase{"Third", 400, 0}}
+	p3 := prediction{phase: phase{"Third", 400, 1.3}, hoursRequired: 520}
 	if (*ps)[2] != p3 {
-		t.Errorf("it should return {Third, 400, 0} but it returned %v", (*ps)[2])
+		t.Errorf("it should return {{Third 400 1.3} 520} but it returned %v", (*ps)[2])
 	}
 
-	p4 := prediction{phase: phase{"Fourth", 100, 0}}
+	p4 := prediction{phase: phase{"Fourth", 100, 1.4}, hoursRequired: 140}
 	if (*ps)[3] != p4 {
-		t.Errorf("it should return {Fourth, 100, 0} but it returned %v", (*ps)[3])
+		t.Errorf("it should return {{Fourth 100 1.4} 140} but it returned %v", (*ps)[3])
 	}
 }
 

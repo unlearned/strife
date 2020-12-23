@@ -51,7 +51,12 @@ func (ps *Phases) text() string {
 		l2 += fmt.Sprintf("%v|", p.padNumber(longestLen))
 		l3 += fmt.Sprintf("%v|", p.padAvarageNumberOfHoursSpent(longestLen))
 	}
-	return fmt.Sprintf("|      phase        |%v\n|      number       |%v\n|average hours spent|%v", l1, l2, l3)
+
+	format := "|         phase        |%v\n"
+	format += "|         number       |%v\n"
+	format += "|average hours required|%v"
+
+	return fmt.Sprintf(format, l1, l2, l3)
 }
 
 func (ps *Phases) longestLength() uint32 {

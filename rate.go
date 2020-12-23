@@ -22,9 +22,10 @@ func (r *rates) predict(num uint16) (*Predictions, error) {
 	endIndex := len(*phs) - 1
 	ps := make(Predictions, endIndex+1)
 
+	h := (*phs)[endIndex].AverageNumberOfHoursSpent
 	ps[endIndex] = prediction{
-		phase:         phase{Name: (*phs)[endIndex].Name, Number: num},
-		hoursRequired: float64(num) * (*phs)[endIndex].AverageNumberOfHoursSpent,
+		phase:         phase{Name: (*phs)[endIndex].Name, Number: num, AverageNumberOfHoursSpent: h},
+		hoursRequired: round2(float64(num) * (*phs)[endIndex].AverageNumberOfHoursSpent),
 	}
 
 	rs := r.rates
@@ -35,9 +36,11 @@ func (r *rates) predict(num uint16) (*Predictions, error) {
 			return nil, err
 		}
 		n := math.Ceil(a)
+
+		h := (*phs)[i].AverageNumberOfHoursSpent
 		ps[i] = prediction{
-			phase:         phase{Name: rate.PhaseBefore, Number: uint16(n)},
-			hoursRequired: float64(n) * (*phs)[i+1].AverageNumberOfHoursSpent,
+			phase:         phase{Name: rate.PhaseBefore, Number: uint16(n), AverageNumberOfHoursSpent: h},
+			hoursRequired: round2(float64(n) * h),
 		}
 	}
 	return &ps, nil

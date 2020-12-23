@@ -26,10 +26,10 @@ func (ps *Predictions) text() string {
 		l4 += fmt.Sprintf("%v|", p.padHoursRequired(longestLen))
 	}
 
-	format := "|      phase        |%v\n"
-	format += "|      number       |%v\n"
-	format += "|average hours spent|%v\n"
-	format += "|   hours required  |%v"
+	format := "|         phase        |%v\n"
+	format += "|         number       |%v\n"
+	format += "|average hours required|%v\n"
+	format += "| total hours required |%v"
 
 	return fmt.Sprintf(format, l1, l2, l3, l4)
 }
