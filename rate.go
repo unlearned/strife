@@ -12,25 +12,45 @@ type rate struct {
 	Rate        *big.Rat
 }
 
-type rates []*rate
+type rates struct {
+	rates  []*rate
+	phases *Phases
+}
 
-func (r *rates) predict(num uint16) (*phases, error) {
-	rLen := len(*r)
-	ps := make(phases, rLen+1)
-	ps[rLen] = phase{Name: (*r)[rLen-1].PhaseAfter, Number: num}
+func (r *rates) predict(num uint16) (*Predictions, error) {
+	phs := r.phases
+	endIndex := len(*phs) - 1
+	ps := make(Predictions, endIndex+1)
 
-	for i := rLen - 1; i >= 0; i-- {
-		rate := (*r)[i]
-		den := rate.Rate.Denom()
-		nume := rate.Rate.Num()
-		if nume.Int64() == 0 {
-			return nil, errors.New("nume MUST be over 0")
+	ps[endIndex] = prediction{
+		phase:         phase{Name: (*phs)[endIndex].Name, Number: num},
+		hoursRequired: float64(num) * (*phs)[endIndex].AverageNumberOfHoursSpent,
+	}
+
+	rs := r.rates
+	for i := endIndex - 1; i >= 0; i-- {
+		rate := rs[i]
+		a, err := fractionalDivide(rate.Rate, ps[i+1].Number)
+		if err != nil {
+			return nil, err
 		}
-		tempNumber := ps[i+1].Number * uint16(den.Int64())
-		ceiled := math.Ceil(float64(tempNumber) / float64(nume.Int64()))
-		ps[i] = phase{Name: rate.PhaseBefore, Number: uint16(ceiled)}
+		n := math.Ceil(a)
+		ps[i] = prediction{
+			phase:         phase{Name: rate.PhaseBefore, Number: uint16(n)},
+			hoursRequired: float64(n) * (*phs)[i+1].AverageNumberOfHoursSpent,
+		}
 	}
 	return &ps, nil
+}
+
+func fractionalDivide(r *big.Rat, n uint16) (float64, error) {
+	den := r.Denom()
+	nume := r.Num()
+	if nume.Int64() == 0 {
+		return 0.0, errors.New("nume MUST be over 0")
+	}
+	temp := n * uint16(den.Int64())
+	return float64(temp) / float64(nume.Int64()), nil
 }
 
 func newRateWithPhase(before, after *phase) (*rate, error) {

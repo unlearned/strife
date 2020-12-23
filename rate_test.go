@@ -8,9 +8,17 @@ import (
 
 func TestPredictSuccess(t *testing.T) {
 	r := &rates{
-		&rate{PhaseBefore: "First", PhaseAfter: "Second", Rate: big.NewRat(2, 5)},
-		&rate{PhaseBefore: "Second", PhaseAfter: "Third", Rate: big.NewRat(1, 3)},
-		&rate{PhaseBefore: "Third", PhaseAfter: "Fourth", Rate: big.NewRat(1, 4)},
+		rates: []*rate{
+			&rate{PhaseBefore: "First", PhaseAfter: "Second", Rate: big.NewRat(2, 5)},
+			&rate{PhaseBefore: "Second", PhaseAfter: "Third", Rate: big.NewRat(1, 3)},
+			&rate{PhaseBefore: "Third", PhaseAfter: "Fourth", Rate: big.NewRat(1, 4)},
+		},
+		phases: &Phases{
+			phase{Name: "First", Number: 3600},
+			phase{Name: "Second", Number: 1440},
+			phase{Name: "Third", Number: 480},
+			phase{Name: "Fourth", Number: 120},
+		},
 	}
 
 	ps, err := r.predict(100)
@@ -18,30 +26,30 @@ func TestPredictSuccess(t *testing.T) {
 		t.Errorf("it should return err as nil but it returned err as %v", err)
 	}
 
-	if reflect.TypeOf(ps).String() != "*strife.phases" {
-		t.Fatalf("it should return *strife.phases but %v", reflect.TypeOf(ps).String())
+	if reflect.TypeOf(ps).String() != "*strife.Predictions" {
+		t.Fatalf("it should return *strife.Phases but %v", reflect.TypeOf(ps).String())
 	}
 
 	if len(*ps) != 4 {
 		t.Fatalf("it should return 4 length but %v length", len(*ps))
 	}
 
-	p1 := phase{"First", 3000, 0}
+	p1 := prediction{phase: phase{"First", 3000, 0}}
 	if (*ps)[0] != p1 {
 		t.Errorf("it should return {First, 3000, 0} but it returned %v", (*ps)[0])
 	}
 
-	p2 := phase{"Second", 1200, 0}
+	p2 := prediction{phase: phase{"Second", 1200, 0}}
 	if (*ps)[1] != p2 {
 		t.Errorf("it should return {Second, 1200, 0} but it returned %v", (*ps)[1])
 	}
 
-	p3 := phase{"Third", 400, 0}
+	p3 := prediction{phase: phase{"Third", 400, 0}}
 	if (*ps)[2] != p3 {
 		t.Errorf("it should return {Third, 400, 0} but it returned %v", (*ps)[2])
 	}
 
-	p4 := phase{"Fourth", 100, 0}
+	p4 := prediction{phase: phase{"Fourth", 100, 0}}
 	if (*ps)[3] != p4 {
 		t.Errorf("it should return {Fourth, 100, 0} but it returned %v", (*ps)[3])
 	}
@@ -49,7 +57,13 @@ func TestPredictSuccess(t *testing.T) {
 
 func TestPredictFailed(t *testing.T) {
 	r := &rates{
-		&rate{PhaseBefore: "First", PhaseAfter: "Second", Rate: big.NewRat(0, 5)},
+		rates: []*rate{
+			&rate{PhaseBefore: "First", PhaseAfter: "Second", Rate: big.NewRat(0, 5)},
+		},
+		phases: &Phases{
+			phase{Name: "First", Number: 0},
+			phase{Name: "Second", Number: 0},
+		},
 	}
 
 	ps, err := r.predict(100)
@@ -133,5 +147,31 @@ func TestPassRateSuccess(t *testing.T) {
 
 	if result.String() != big.NewRat(2, 10).String() {
 		t.Errorf("it should return 1/5 but it returned %v", result)
+	}
+}
+
+func TestFractionalDivideSuccess(t *testing.T) {
+	r := big.NewRat(2, 4)
+	n, err := fractionalDivide(r, 5)
+
+	if err != nil {
+		t.Errorf("it should return err as nil but it returned %v", err)
+	}
+
+	if n != 10.0 {
+		t.Errorf("it should return 10 but it returned %v", n)
+	}
+}
+
+func TestFractionalDivideFailed(t *testing.T) {
+	r := big.NewRat(0, 4)
+	n, err := fractionalDivide(r, 5)
+
+	if err == nil {
+		t.Error("it should return err but it returned err as nil")
+	}
+
+	if n != 0.0 {
+		t.Errorf("it should return 0.0 but it returned %v", n)
 	}
 }
