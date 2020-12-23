@@ -21,7 +21,7 @@ func TestPredictText(t *testing.T) {
 func TestPadStringLongerThenNumber(t *testing.T) {
 	strOrg := "aaaaa"
 	str := pad(strOrg, uint32(4))
-	if str != stnrOrg {
+	if str != strOrg {
 		t.Errorf("it should return %v but it returned %v", strOrg, str)
 	}
 }
