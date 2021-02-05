@@ -2,7 +2,7 @@
 NAME := strife
 VERSION := $(gobump show -r)
 REVISION := $(shell git rev-parse --short HEAD)
-LDFLAGS := "-X main.revision=$(REVISION)"
+LDFLAGS := -X main.revision=$(REVISION)
 
 export GO111MODULE=on
 
