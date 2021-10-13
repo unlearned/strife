@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestConvNumTypeSucess(t *testing.T) {
+func TestConvNumTypeSuccess(t *testing.T) {
 	n, err := convNumType("100")
 	if err != nil {
 		t.Errorf("it should return err as nil but it returned %v", err)
